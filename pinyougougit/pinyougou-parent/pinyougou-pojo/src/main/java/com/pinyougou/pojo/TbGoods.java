@@ -1,8 +1,9 @@
 package com.pinyougou.pojo;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class TbGoods {
+public class TbGoods implements Serializable {
     private Long id;
 
     private String sellerId;
