@@ -70,7 +70,14 @@ public class GoodsController {
 	 * @return
 	 */
 	@RequestMapping("/update")
-	public Result update(@RequestBody TbGoods goods){
+	public Result update(@RequestBody Goods goods){
+		//真正修改前需要判断一下修改的商品归属的商户
+		Goods id1 = goodsService.findOne(goods.getGoods().getId());//获取当前要修改id
+		String id2 = SecurityContextHolder.getContext().getAuthentication().getName();//获取当前登录的商户id
+		//判断
+		if (!id1.getGoods().getSellerId().equals(id2) || !goods.getGoods().getSellerId().equals(id2)){
+			return new Result(false,"请自重");
+		}
 		try {
 			goodsService.update(goods);
 			return new Result(true, "修改成功");
@@ -121,4 +128,6 @@ public class GoodsController {
 		goods.setSellerId(id);
 		return goodsService.findPage(goods, page, rows);		
 	}
+
+
 }

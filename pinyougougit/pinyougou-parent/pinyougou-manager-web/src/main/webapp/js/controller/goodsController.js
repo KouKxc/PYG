@@ -1,5 +1,5 @@
  //控制层 
-app.controller('goodsController' ,function($scope,$controller   ,goodsService){	
+app.controller('goodsController' ,function($scope,$controller   ,goodsService,itemCatService){
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -32,7 +32,7 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService){
 	}
 	
 	//保存 
-	$scope.save=function(){				
+	$scope.save=function(){
 		var serviceObject;//服务层对象  				
 		if($scope.entity.id!=null){//如果有ID
 			serviceObject=goodsService.update( $scope.entity ); //修改  
@@ -42,7 +42,7 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService){
 		serviceObject.success(
 			function(response){
 				if(response.success){
-					//重新查询 
+					//重新查询
 		        	$scope.reloadList();//重新加载
 				}else{
 					alert(response.message);
@@ -76,5 +76,33 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService){
 			}			
 		);
 	}
-    
+
+	//定义一个数组 显示状态   在页面上传入索引获取状态
+	$scope.status = ['未审核', '以审核', '审核未通过', '关闭'];//商品状态
+
+	$scope.itemCatList = [];//商品分类列表
+	//加载商品分类列表
+	$scope.findItemCatList = function () {
+		itemCatService.findAll().success(function (response) {
+			for (var i = 0; i < response.length; i++) {
+				$scope.itemCatList[response[i].id] = response[i].name
+			}
+		})
+	};
+
+	//更改状态
+	$scope.updateStatus=function (status) {
+		goodsService.updateStatus($scope.selectIds,status).success(
+			function (response) {
+				if (response.success){
+					//成功
+					$scope.reloadList();//刷新列表
+					$scope.selectIds=[];//清空Id数组
+				}else{
+					alert(response.message)
+				}
+			}
+		)
+	}
+
 });	

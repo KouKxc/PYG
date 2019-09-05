@@ -1,9 +1,15 @@
 package com.pinyougou.pojo;
 
-public class TbContentCategory {
+import java.io.Serializable;
+import java.security.SecureRandom;
+
+public class TbContentCategory implements Serializable {
     private Long id;
 
     private String name;
+
+    //Student s = new Student();
+    //s.name = "zhangsan";
 
     public Long getId() {
         return id;

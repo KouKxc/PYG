@@ -33,12 +33,10 @@ app.controller('goodsController', function ($scope, $controller, goodsService, i
     }*/
     $scope.findOne = function () {
         var id = $location.search()['id'];//获取参数值
-        if (id == null) {
-            return;
-        }
+        if (id == null) {return;}
 
         goodsService.findOne(id).success(function (response) {
-            $scope.entity = response
+            $scope.entity = response;
 
             //富文本编辑器的回显  （向富文本编辑器添加商品介绍）
             editor.html($scope.entity.goodsDesc.introduction);
@@ -47,31 +45,32 @@ app.controller('goodsController', function ($scope, $controller, goodsService, i
             $scope.entity.goodsDesc.itemImages = JSON.parse($scope.entity.goodsDesc.itemImages);
 
             //回显扩展属性 (只需将返回的字符串数据转换为json格式即可){由于与新增时的代码可能有冲突}
-            $scope.entity.goodsDesc.customAttributeItems = JSON.parse($scope.entity.goodsDesc.customAttributeItems)
+            $scope.entity.goodsDesc.customAttributeItems = JSON.parse($scope.entity.goodsDesc.customAttributeItems);
 
             //回显规格列表
-            $scope.entity.goodsDesc.specificationItems = JSON.parse($scope.entity.goodsDesc.specificationItems)
+            $scope.entity.goodsDesc.specificationItems = JSON.parse($scope.entity.goodsDesc.specificationItems);
             //根据规格名称和选项名称返回是否被勾选
-            $scope.checkAttributeValue=function (specName, optionName) {
+            $scope.checkAttributeValue = function (specName, optionName) {
 
-                var object = $scope.searchObjectByKey($scope.entity.goodsDesc.specificationItems,'attributeName',specName);
-                if (object==null){
+                var object = $scope.searchObjectByKey($scope.entity.goodsDesc.specificationItems, 'attributeName', specName);
+                if (object == null) {
                     return false
-                } else{
-                    return object.attributeValue.indexOf(optionName)>=0
+                } else {
+                    return object.attributeValue.indexOf(optionName) >= 0
                 }
 
-            }
+            };
             for (var i = 0; i < $scope.entity.itemList.length; i++) {
-                $scope.entity.itemList[i].spec = JSON.parse( $scope.entity.itemList[i].spec)
+                $scope.entity.itemList[i].spec = JSON.parse($scope.entity.itemList[i].spec)
             }
         })
-    }
+    };
 
     //保存
     $scope.save = function () {
+        $scope.entity.goodsDesc.introduction=editor.html();//提取文本编辑器的值
         var serviceObject;//服务层对象
-        if ($scope.entity.id != null) {//如果有ID
+        if ($scope.entity.goods.id != null) {//如果有ID
             serviceObject = goodsService.update($scope.entity); //修改
         } else {
             serviceObject = goodsService.add($scope.entity);//增加
@@ -79,8 +78,10 @@ app.controller('goodsController', function ($scope, $controller, goodsService, i
         serviceObject.success(
             function (response) {
                 if (response.success) {
-                    //重新查询
-                    $scope.reloadList();//重新加载
+                    alert('保存成功');
+                    $scope.entity={};//清空
+                    editor.html("");//清空富文本编辑器
+                    location.href='goods.html'//保存成功后跳转到商品列表页
                 } else {
                     alert(response.message);
                 }
@@ -115,7 +116,7 @@ app.controller('goodsController', function ($scope, $controller, goodsService, i
     }
 
     //保存
-    $scope.add = function () {
+    /*$scope.add = function () {
         $scope.entity.goodsDesc.introduction = editor.html();
         goodsService.add($scope.entity).success(
             function (response) {
@@ -129,7 +130,7 @@ app.controller('goodsController', function ($scope, $controller, goodsService, i
                 }
             }
         )
-    }
+    }*/
     /**
      * 图片上传阶段
      */
@@ -281,4 +282,9 @@ app.controller('goodsController', function ($scope, $controller, goodsService, i
         })
     }
 
+    $scope.itemListDelete=function (a) {
+        if (a =="1"){
+           $scope.entity.itemList = [];
+        }
+    }
 });

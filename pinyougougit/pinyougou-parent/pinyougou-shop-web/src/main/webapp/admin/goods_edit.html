@@ -45,6 +45,7 @@
 <body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="goodsController"
       ng-init="selectItemCat1List();findOne()">
 
+{{entity}}
 <!-- 正文区域 -->
 <section class="content">
 
@@ -204,13 +205,13 @@
 
                 <!--规格-->
 
-
+                {{entity.itemList}}
                 <div class="tab-pane" id="spec">
                     <div class="row data-type">
                         <div class="col-md-2 title">是否启用规格</div>
                         <div class="col-md-10 data">
                             <input type="checkbox" ng-model="entity.goods.isEnableSpec" ng-true-value="1"
-                                   ng-false-value="0">
+                                   ng-false-value="0"  ng-click="itemListDelete(entity.goods.isEnableSpec)">
                         </div>
                     </div>
                     <p>
@@ -286,8 +287,9 @@
 
     </div>
     <div class="btn-toolbar list-toolbar">
-        <button class="btn btn-primary" ng-click="add()"><i class="fa fa-save"></i>保存</button>
-        <button class="btn btn-default">返回列表</button>
+        <button class="btn btn-primary" ng-click="save()"><i class="fa fa-save"></i>保存</button>
+<!--        <button class="btn btn-default">返回列表</button>-->
+        <a href="goods.html" class="btn btn-default">返回列表</a>
     </div>
 
 </section>
